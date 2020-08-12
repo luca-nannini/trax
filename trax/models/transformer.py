@@ -571,10 +571,12 @@ def _FeedForwardBlock(d_model, d_ff, dropout, dropout_shared_axes,
 
   return [
       tl.LayerNorm(),
-      tl.Dense(d_ff),
-      activation(),
-      dropout_middle,
-      tl.Dense(d_model),
+      # tl.QuantizedDense(d_ff, mode=mode),
+      # activation(),
+      # dropout_middle,
+      # tl.QuantizedDense(d_model, mode=mode),
+      # tl.LSHFF(d_ff, n_buckets=[32, 32], n_hashes=64),
+      tl.SparseFF(d_ff, n_elements_in_block=32, mode=mode),
       dropout_final,
   ]
 
